@@ -6,6 +6,7 @@ Plots top 3 models for success rate, final error, solve time, and CPU utilizatio
 import json
 import os
 import glob
+import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -52,7 +53,44 @@ for filepath in json_files:
     })
 
 df = pd.DataFrame(data)
-print(f"\nLoaded {len(df)} models")
+print(f"\nLoaded {len(df)} runs")
+print(df)
+
+
+def canonical_model_name(name: str) -> str:
+    """Collapse run-level model names into a base name for aggregation."""
+    if name is None:
+        return "Unknown"
+    if name.lower() == "mpc":
+        return "MPC"
+    base = name
+    base = re.sub(r"_best_[^_]+_\d+$", "", base)
+    base = re.sub(r"_best_mse_\d+$", "", base)
+    base = re.sub(r"_trial\d+.*$", "", base)
+    base = re.sub(r"_\d{8}_\d{6}$", "", base)
+    base = re.sub(r"_\d+$", "", base)
+    return base
+
+
+# Aggregate metrics across runs of the same model
+df['ModelBase'] = df['Model'].apply(canonical_model_name)
+metric_cols = [
+    'Success Rate @0.02m', 'Success Rate @0.03m', 'Success Rate @0.05m',
+    'Final Error (m)', 'Solve Time (ms)', 'CPU Time (s)', 'CPU Percent',
+    'Steps to Success @0.02m', 'Steps to Success @0.03m', 'Steps to Success @0.05m',
+    'Steps (All Episodes)', 'Tracking Error (m)', 'Control Effort',
+    'Mean Joint Error (MPC only)', 'Action Diff from MPC', 'Wall Time (s)'
+]
+
+df_mean = df.groupby(['ModelBase', 'Type'])[metric_cols].mean().reset_index()
+df_std = df.groupby(['ModelBase', 'Type'])[metric_cols].std().reset_index()
+
+for col in metric_cols:
+    df_mean[f"{col} Std"] = df_std[col]
+
+df = df_mean.rename(columns={'ModelBase': 'Model'})
+df.fillna(0, inplace=True)
+print(f"Aggregated to {len(df)} models (mean over runs). Columns with 'Std' show run-to-run std dev.")
 print(df)
 
 # Helper for consistent colors and ensuring MPC inclusion
@@ -99,11 +137,12 @@ ax.set_xticklabels(top_success['Model'], rotation=45, ha='right')
 ax.set_ylabel('Success Rate (%)')
 ax.set_title('Top 5 - Success Rate (All Thresholds)', fontweight='bold')
 ax.set_ylim([0, 100])
-ax.legend(loc='upper left')
+handles, labels = ax.get_legend_handles_labels()
+fig.legend(handles, labels, loc='upper right')
 ax.grid(axis='y', alpha=0.3)
 fig.tight_layout()
-fig.savefig('results/closed_loop_success_thresholds.png', dpi=150, bbox_inches='tight')
-print("Plot saved to results/closed_loop_success_thresholds.png")
+fig.savefig('results/closed_loop/plots/mean/closed_loop_success_thresholds.png', dpi=150, bbox_inches='tight')
+print("Plot saved to results/closed_loop/plots/mean/closed_loop_success_thresholds.png")
 
 # 2. Final Error (lower is better)
 top_error = select_top_with_mpc(df, 'Final Error (m)', n=5, ascending=True)
@@ -118,8 +157,8 @@ for i, (idx, row) in enumerate(top_error.iterrows()):
     ax.text(i, row['Final Error (m)'] + 0.02, f"{row['Final Error (m)']:.4f}m", ha='center', va='bottom')
 ax.grid(axis='y', alpha=0.3)
 fig.legend(handles=legend_elements, loc='upper right')
-fig.savefig('results/closed_loop_final_error.png', dpi=150, bbox_inches='tight')
-print("Plot saved to results/closed_loop_final_error.png")
+fig.savefig('results/closed_loop/plots/mean/closed_loop_final_error.png', dpi=150, bbox_inches='tight')
+print("Plot saved to results/closed_loop/plots/mean/closed_loop_final_error.png")
 
 # 3. Solve Time (lower is better)
 top_time = select_top_with_mpc(df, 'Solve Time (ms)', n=5, ascending=True)
@@ -134,8 +173,8 @@ for i, (idx, row) in enumerate(top_time.iterrows()):
     ax.text(i, row['Solve Time (ms)'] + 0.05, f"{row['Solve Time (ms)']:.3f}ms", ha='center', va='bottom')
 ax.grid(axis='y', alpha=0.3)
 fig.legend(handles=legend_elements, loc='upper right')
-fig.savefig('results/closed_loop_solvetime.png', dpi=150, bbox_inches='tight')
-print("Plot saved to results/closed_loop_solvetime.png")
+fig.savefig('results/closed_loop/plots/mean/closed_loop_solvetime.png', dpi=150, bbox_inches='tight')
+print("Plot saved to results/closed_loop/plots/mean/closed_loop_solvetime.png")
 
 # 4. CPU Percent (lower is better)
 top_cpu = select_top_with_mpc(df, 'CPU Percent', n=5, ascending=True)
@@ -150,8 +189,8 @@ for i, (idx, row) in enumerate(top_cpu.iterrows()):
     ax.text(i, row['CPU Percent'] + 0.1, f"{row['CPU Percent']:.2f}%", ha='center', va='bottom')
 ax.grid(axis='y', alpha=0.3)
 fig.legend(handles=legend_elements, loc='upper right')
-fig.savefig('results/closed_loop_cpu.png', dpi=150, bbox_inches='tight')
-print("Plot saved to results/closed_loop_cpu.png")
+fig.savefig('results/closed_loop/plots/mean/closed_loop_cpu.png', dpi=150, bbox_inches='tight')
+print("Plot saved to results/closed_loop/plots/mean/closed_loop_cpu.png")
 
 # 4b. Wall Time (lower is better)
 top_walltime = select_top_with_mpc(df, 'Wall Time (s)', n=5, ascending=True)
@@ -166,8 +205,8 @@ for i, (idx, row) in enumerate(top_walltime.iterrows()):
     ax.text(i, row['Wall Time (s)'] + 0.02, f"{row['Wall Time (s)']:.3f}s", ha='center', va='bottom')
 ax.grid(axis='y', alpha=0.3)
 fig.legend(handles=legend_elements, loc='upper right')
-fig.savefig('results/closed_loop_walltime.png', dpi=150, bbox_inches='tight')
-print("Plot saved to results/closed_loop_walltime.png")
+fig.savefig('results/closed_loop/plots/mean/closed_loop_walltime.png', dpi=150, bbox_inches='tight')
+print("Plot saved to results/closed_loop/plots/mean/closed_loop_walltime.png")
 
 # 5. Steps to Success (all thresholds, lower is better)
 top_steps_success = select_top_with_mpc(df.replace(0, np.nan).dropna(subset=['Steps to Success @0.02m']), 'Steps to Success @0.02m', n=5, ascending=True)
@@ -185,8 +224,8 @@ if not top_steps_success.empty:
     ax.legend(loc='upper left')
     ax.grid(axis='y', alpha=0.3)
     fig.tight_layout()
-    fig.savefig('results/closed_loop_steps_success_thresholds.png', dpi=150, bbox_inches='tight')
-    print("Plot saved to results/closed_loop_steps_success_thresholds.png")
+    fig.savefig('results/closed_loop/plots/mean/closed_loop_steps_success_thresholds.png', dpi=150, bbox_inches='tight')
+    print("Plot saved to results/closed_loop/plots/mean/closed_loop_steps_success_thresholds.png")
 
 # 6. Steps (All Episodes) (lower is better)
 top_steps_all = select_top_with_mpc(df.replace(0, np.nan).dropna(subset=['Steps (All Episodes)']), 'Steps (All Episodes)', n=5, ascending=True)
@@ -202,8 +241,8 @@ if not top_steps_all.empty:
         ax.text(i, row['Steps (All Episodes)'] + 0.5, f"{row['Steps (All Episodes)']:.1f}", ha='center', va='bottom')
     ax.grid(axis='y', alpha=0.3)
     fig.legend(handles=legend_elements, loc='upper right')
-    fig.savefig('results/closed_loop_steps_all.png', dpi=150, bbox_inches='tight')
-    print("Plot saved to results/closed_loop_steps_all.png")
+    fig.savefig('results/closed_loop/plots/mean/closed_loop_steps_all.png', dpi=150, bbox_inches='tight')
+    print("Plot saved to results/closed_loop/plots/mean/closed_loop_steps_all.png")
 
 # 7. Tracking Error (lower is better)
 top_track = select_top_with_mpc(df.replace(0, np.nan).dropna(subset=['Tracking Error (m)']), 'Tracking Error (m)', n=5, ascending=True)
@@ -219,8 +258,8 @@ if not top_track.empty:
         ax.text(i, row['Tracking Error (m)'] + 0.01, f"{row['Tracking Error (m)']:.3f}m", ha='center', va='bottom')
     ax.grid(axis='y', alpha=0.3)
     fig.legend(handles=legend_elements, loc='upper right')
-    fig.savefig('results/closed_loop_tracking_error.png', dpi=150, bbox_inches='tight')
-    print("Plot saved to results/closed_loop_tracking_error.png")
+    fig.savefig('results/closed_loop/plots/mean/closed_loop_tracking_error.png', dpi=150, bbox_inches='tight')
+    print("Plot saved to results/closed_loop/plots/mean/closed_loop_tracking_error.png")
 
 # 8. Control Effort (lower is better)
 top_effort = select_top_with_mpc(df.replace(0, np.nan).dropna(subset=['Control Effort']), 'Control Effort', n=5, ascending=True)
@@ -236,8 +275,8 @@ if not top_effort.empty:
         ax.text(i, row['Control Effort'] + 0.05, f"{row['Control Effort']:.2f}", ha='center', va='bottom')
     ax.grid(axis='y', alpha=0.3)
     fig.legend(handles=legend_elements, loc='upper right')
-    fig.savefig('results/closed_loop_control_effort.png', dpi=150, bbox_inches='tight')
-    print("Plot saved to results/closed_loop_control_effort.png")
+    fig.savefig('results/closed_loop/plots/mean/closed_loop_control_effort.png', dpi=150, bbox_inches='tight')
+    print("Plot saved to results/closed_loop/plots/mean/closed_loop_control_effort.png")
 
 # Print summary table
 print("\n" + "="*100)
