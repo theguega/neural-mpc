@@ -23,4 +23,4 @@ name = "Compile Typst report"
 entry = "make"
 language = "system"
 pass_filenames = false
-files = "^report/.*\\.typ$"
+files = "docs/report.typ"
