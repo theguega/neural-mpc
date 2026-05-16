@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Behavior Cloning of MPC for 3-DOF Manipulators - Poster</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #111827;
+      --muted: #4b5563;
+      --accent: #1d4ed8;
+      --ok: #065f46;
+      --line: #d1d5db;
+      --a0-width: 841mm;
+      --a0-height: 1189mm;
+      --radius: 12px;
+      --radius-sm: 10px;
+      --space-1: 4mm;
+      --space-2: 6mm;
+      --space-3: 8mm;
+      --space-4: 10mm;
+      --space-5: 12mm;
+      --space-6: 24mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+
+    @page {
+      size: A0 portrait;
+      margin: 0;
+    }
+
+    .poster {
+      width: var(--a0-width);
+      min-height: var(--a0-height);
+      margin: 0 auto;
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-5);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .hero {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+      padding: var(--space-5);
+    }
+
+    .hero h1 {
+      margin: 0 0 var(--space-1) 0;
+      font-size: 52px;
+      line-height: 1.15;
+    }
+
+    .hero strong {
+      font-size: 30px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #1f2937;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+    }
+
+    .card h2 {
+      margin: 0 0 var(--space-2) 0;
+      font-size: 34px;
+    }
+
+    .card p,
+    .card li,
+    .hero p {
+      font-size: 24px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero > * + *,
+    .card > * + * {
+      margin-top: var(--space-2);
+    }
+
+    .pipeline {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2);
+      background: #f9fafb;
+    }
+
+    .step strong {
+      color: var(--accent);
+    }
+
+    .replace {
+      margin: 0;
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid #93c5fd;
+      background: #eff6ff;
+      font-size: 30px;
+    }
+
+    .hero .replace {
+      margin-top: var(--space-4);
+    }
+
+    .replace .old {
+      color: #7c2d12;
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+
+    .replace .new {
+      color: var(--ok);
+      font-weight: 700;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .metric .muted {
+      display: block;
+      margin-bottom: var(--space-1);
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-1);
+    }
+
+    .metric div {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2);
+      background: #f9fafb;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 40px;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .schema-wrap {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: var(--space-3);
+      align-items: stretch;
+    }
+
+    .schema-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2);
+      background: #f9fafb;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .schema-caption {
+      display: block;
+      width: 100%;
+      font-size: 21px;
+      color: var(--muted);
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      white-space: normal;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .fig-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2);
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      height: 100%;
+      min-width: 0;
+    }
+
+    .fig-card img {
+      width: 100%;
+      display: block;
+      border-radius: 6px;
+      object-fit: contain;
+      background: #fff;
+      padding: var(--space-1);
+      border: 1px solid #e5e7eb;
+      flex: 1 1 auto;
+      min-height: 160mm;
+    }
+
+    .schema-wrap .fig-card img {
+      min-height: 220mm;
+      aspect-ratio: 4 / 3;
+    }
+
+    .results-figures .fig-card img {
+      min-height: 140mm;
+      aspect-ratio: 16 / 9;
+    }
+
+    .fig-card figcaption {
+      font-size: 21px;
+      color: var(--muted);
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .results-figures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      align-items: stretch;
+    }
+
+    .schema-svg {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      max-height: 240mm;
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .poster {
+        width: 100%;
+        min-height: 100vh;
+        padding: 24px;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .card h2 {
+        font-size: 20px;
+      }
+
+      .card p,
+      .card li,
+      .hero p,
+      .replace {
+        font-size: 18px;
+      }
+
+      .metric strong {
+        font-size: 24px;
+      }
+
+      .schema-wrap,
+      .results-figures {
+        grid-template-columns: 1fr;
+      }
+
+      .schema-caption,
+      .fig-card figcaption {
+        font-size: 14px;
+      }
+
+      .schema-svg {
+        max-height: none;
+      }
+
+      .fig-card img,
+      .schema-wrap .fig-card img,
+      .results-figures .fig-card img {
+        min-height: 260px;
+        aspect-ratio: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <section class="hero">
+      <h1>Behavior Cloning of MPC for 3-DOF Robotic Manipulators</h1>
+      <p><strong>Accepted Poster:</strong> IEEE ICRA 2026 Workshop on RL in the Era of IL</p>
+      <p class="muted">Theo Guegan, Wen Jie Dexter Teo - University of Waterloo</p>
+      <div class="replace">
+        <span class="old">IK + MPC online control stack</span>
+        &nbsp; -> &nbsp;
+        <span class="new">Neural network policy (MLP) for real-time control</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Problem</h2>
+      <p>
+        Model Predictive Control (MPC) provides strong tracking quality and stability for
+        robotic manipulation, but it requires solving an optimization problem at every control
+        step. This repeated solve introduces latency and runtime variability that can limit
+        deployment in high-frequency control loops and on compute-constrained platforms.
+        Our objective is to preserve the expert controller behavior while reducing inference
+        time and computational load.
+      </p>
+      <ul>
+        <li>System: 3-DOF manipulator in MuJoCo</li>
+        <li>Task: reach random Cartesian targets in workspace</li>
+        <li>Observable input: joint angles, joint velocities, and target position</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Expert Controller and Dataset</h2>
+      <p>
+        We generate demonstrations using a hierarchical expert:
+        IK computes a joint-space reference and MPC outputs torques.
+      </p>
+      <div class="pipeline">
+        <div class="step"><strong>Step 1:</strong> sample reachable target position.</div>
+        <div class="step"><strong>Step 2:</strong> IK computes desired joint angles.</div>
+        <div class="step"><strong>Step 3:</strong> MPC computes optimal torques.</div>
+        <div class="step"><strong>Step 4:</strong> store (state, target, torque) tuples.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Learning Setup</h2>
+      <p>
+        We formulate policy imitation as supervised regression from robot state and target
+        to expert torque commands generated by the IK+MPC controller. The training data is
+        collected from closed-loop expert rollouts, and models are optimized to minimize
+        the discrepancy between predicted and expert actions. We compare static and temporal
+        neural architectures to test whether explicit history improves control fidelity.
+      </p>
+      <ul>
+        <li>Primary objective: minimize torque imitation error from expert demonstrations</li>
+        <li>Training criterion: MSE (selected after loss-function comparison)</li>
+        <li>Architectures evaluated: deep MLP, sliding-window MLP, and GRU</li>
+        <li>Best performer: deep feedforward MLP for accuracy and runtime efficiency</li>
+      </ul>
+    </section>
+
+    <section class="card full">
+      <h2>Architecture Schema</h2>
+      <p>
+        Training uses expert supervision (IK + MPC); deployment replaces online optimization
+        with a direct neural policy mapping from state and target to torques.
+      </p>
+      <div class="schema-wrap">
+        <div class="schema-box">
+          <svg class="schema-svg" viewBox="0 0 1280 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture schema from IK plus MPC expert to neural policy">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#1d4ed8" />
+              </marker>
+              <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#065f46" />
+              </marker>
+            </defs>
+
+            <rect x="28" y="45" width="1224" height="300" rx="16" fill="#eef2ff" stroke="#c7d2fe" stroke-width="2" />
+            <text x="58" y="90" font-size="36" fill="#1f2937" font-weight="700">Training (Behavior Cloning from Expert)</text>
+
+            <rect x="70" y="130" width="250" height="150" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+            <text x="92" y="190" font-size="30" fill="#111827" font-weight="700">Input</text>
+            <text x="92" y="233" font-size="25" fill="#374151">x = [q, q&#775;, p<tspan baseline-shift="sub" font-size="17">des</tspan>]</text>
+
+            <rect x="390" y="130" width="240" height="150" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+            <text x="420" y="190" font-size="30" fill="#111827" font-weight="700">IK Module</text>
+            <text x="420" y="233" font-size="25" fill="#374151">q_des</text>
+
+            <rect x="700" y="130" width="240" height="150" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+            <text x="720" y="190" font-size="30" fill="#111827" font-weight="700">MPC Solver</text>
+            <text x="720" y="233" font-size="25" fill="#374151">&tau;<tspan baseline-shift="sub" font-size="17">MPC</tspan></text>
+
+            <rect x="1010" y="130" width="210" height="150" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+            <text x="1040" y="190" font-size="30" fill="#111827" font-weight="700">Dataset</text>
+            <text x="1036" y="233" font-size="25" fill="#374151">(x, &tau;<tspan baseline-shift="sub" font-size="17">MPC</tspan>)</text>
+
+            <line x1="320" y1="205" x2="388" y2="205" stroke="#1d4ed8" stroke-width="4" marker-end="url(#arrow)" />
+            <line x1="630" y1="205" x2="698" y2="205" stroke="#1d4ed8" stroke-width="4" marker-end="url(#arrow)" />
+            <line x1="940" y1="205" x2="1008" y2="205" stroke="#1d4ed8" stroke-width="4" marker-end="url(#arrow)" />
+
+            <rect x="28" y="395" width="1224" height="320" rx="16" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2" />
+            <text x="58" y="440" font-size="36" fill="#064e3b" font-weight="700">Deployment (Expert Replaced)</text>
+
+            <rect x="80" y="485" width="300" height="160" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2" />
+            <text x="110" y="548" font-size="30" fill="#111827" font-weight="700">Input</text>
+            <text x="110" y="590" font-size="25" fill="#374151">x = [q, q&#775;, p<tspan baseline-shift="sub" font-size="17">des</tspan>]</text>
+
+            <rect x="500" y="485" width="300" height="160" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2" />
+            <text x="533" y="548" font-size="30" fill="#111827" font-weight="700">MLP Policy</text>
+            <text x="533" y="590" font-size="25" fill="#374151">&pi;<tspan baseline-shift="sub" font-size="17">&theta;</tspan>(x) -> &#964;&#770;</text>
+
+            <rect x="920" y="485" width="280" height="160" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2" />
+            <text x="948" y="548" font-size="30" fill="#111827" font-weight="700">Robot Control</text>
+            <text x="948" y="590" font-size="25" fill="#374151">fast real-time torque</text>
+
+            <line x1="380" y1="565" x2="498" y2="565" stroke="#065f46" stroke-width="5" marker-end="url(#arrowGreen)" />
+            <line x1="800" y1="565" x2="918" y2="565" stroke="#065f46" stroke-width="5" marker-end="url(#arrowGreen)" />
+          </svg>
+          <p class="schema-caption">
+            Fig 1 - Expert-to-policy architecture schema.
+          </p>
+        </div>
+
+        <figure class="fig-card">
+          <img src="figures/3dof-arm-mujoco.png" alt="3-DOF arm in MuJoCo environment">
+          <figcaption>Fig 2 - 3-DOF manipulator in MuJoCo.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>Main Result: Replacing IK + MPC with a Neural Policy</h2>
+      <p>
+        In deployment, the learned MLP replaces the online IK+MPC optimization loop:
+        it maps current state and target directly to torques.
+      </p>
+      <div class="metric">
+        <div>
+          <span class="muted">Relaxed tolerance success rate</span>
+          <strong>84.98%</strong>
+        </div>
+        <div>
+          <span class="muted">Mean final tracking error</span>
+          <strong>2.9 cm</strong>
+        </div>
+        <div>
+          <span class="muted">Inference latency</span>
+          <strong>~1.1 ms</strong>
+        </div>
+        <div>
+          <span class="muted">Latency improvement vs expert MPC</span>
+          <strong>~3x faster</strong>
+        </div>
+      </div>
+      <ul>
+        <li>Static MLP outperforms temporal models (GRU and sliding-window MLP).</li>
+        <li>Current state is sufficient in this setup (Markov behavior is dominant).</li>
+        <li>Neural policy is better suited for high-frequency real-time control.</li>
+      </ul>
+      <div class="results-figures">
+        <figure class="fig-card">
+          <img src="figures/closed_loop_success_thresholds.png" alt="Closed-loop success rate comparison across thresholds">
+          <figcaption>Fig 3 - Closed-loop success rate across error thresholds.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <img src="figures/mpc_mlp_solvetime_boxplot.png" alt="Solve-time distribution comparing MPC and MLP policy">
+          <figcaption>Fig 4 - Solve time distribution: MPC vs MLP_Deep.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>Takeaway</h2>
+      <p>
+        We preserve most of the expert behavior while removing expensive online optimization.
+        This demonstrates a practical path from <strong>IK + MPC</strong> to a lightweight
+        <strong>neural controller</strong> for embedded and real-time robotic applications.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
