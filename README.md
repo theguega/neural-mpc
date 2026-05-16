@@ -2,7 +2,7 @@
 
 Accepted as a poster at the IEEE ICRA 2026 Workshop on RL in the Era of IL: this work replaces the IK + MPC control stack with a neural network surrogate policy.
 
-Paper (PDF): [https://theguega.github.io/neural-mpc/main.pdf](https://theguega.github.io/neural-mpc/main.pdf)
+Paper (PDF): [https://theguega.github.io/neural-mpc/main.pdf](https://theguega.github.io/neural-mpc/main.pdf)  
 Poster (HTML): [https://theguega.github.io/neural-mpc/poster.html](https://theguega.github.io/neural-mpc/poster.html)
 
 [![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
