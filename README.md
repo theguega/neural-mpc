@@ -21,7 +21,7 @@ This repository implements a surrogate modeling approach to replace computationa
 
 ### Prerequisites
 
-- tested with Python 3.12.13
+- Python 3.12+
 
 ### Setup
 
@@ -107,10 +107,10 @@ uv run python scripts/replay_dataset_mujoco.py
 ## Project Structure
 
 ```
-├── data/                    # Generated datasets
 ├── docs/                    # Research report, figures, and documentation
 ├── models/                  # MuJoCo model files
-├── results/                 # Evaluation results and plots
+├── prek.toml                # Prek hook configuration
+├── pyproject.toml           # Project metadata and dependencies
 ├── scripts/                 # Utility scripts and notebooks
 │   ├── analyze_closed_loop.py       # Closed-loop performance analysis
 │   ├── closed_loop_eval.py          # Closed-loop evaluation
@@ -121,11 +121,12 @@ uv run python scripts/replay_dataset_mujoco.py
 │   ├── replay_dataset_mujoco.py     # Dataset visualization
 │   ├── scikit_learn_baseline.py     # Baseline model training
 │   └── visualize_scikit_results.py  # Results visualization
-├── src/mpc_surrogate/       # Core package
+├── src/neural_mpc/          # Core package
 │   ├── mpc_controller.py    # MPC implementation
 │   ├── mujoco_env.py        # MuJoCo environment wrapper
 │   └── utils.py             # Helper functions
-└── tests/                   # Unit tests
+├── tests/                   # Unit tests
+└── uv.lock                  # Locked dependency resolution
 ```
 
 ## Contributing
