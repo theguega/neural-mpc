@@ -8,7 +8,7 @@
     Behavior Cloning of MPC for 3-DOF Robotic Manipulators
   ]),
   abstract: [
-    While Model Predictive Control (MPC) provides strong stability and robustness, it imposes a significant computational burden on real-time systems and resource-constrained devices. This paper investigates the application of Behavior Cloning to approximate MPC policies for the real-time control of a 3-degree-of-freedom (3-DOF) robotic manipulator. We present a baseline controller combining Inverse Kinematics with MPC and evaluate a spectrum of neural network architectures, ranging from classical regression algorithms to complex deep learning models including Deep MLPs and RNNs, to derive computationally efficient surrogate policies. We analyze generalization capabilities, stability considerations, and the trade-offs inherent in different architectural choices. Our empirical study employs both online and offline evaluations to assess performance regarding accuracy, computational efficiency, and fidelity to the original MPC policy. Our results demonstrate that Behavior Cloning can effectively reduce the computational burden of MPC policies for 3-DOF robotic manipulators, achieving a 3x reduction in inference latency with a 84.98% success rate under relaxed tolerances. Notably, we find that static architectures outperform temporal variants, confirming the sufficiency of instantaneous state observations for this task. However, we observe a precision gap under strict tolerances, which suggest that while Behavior Cloning captures the global optimal trajectory, further research is needed to minimize terminal steady-state error.
+    While Model Predictive Control (MPC) provides strong stability and robustness, it imposes a significant computational burden on real-time systems. This paper investigates the application of Behavior Cloning to approximate MPC policies for the real-time control of a 3-degree-of-freedom robotic manipulator. We present a baseline controller combining Inverse Kinematics with MPC and evaluate neural network architectures, ranging from classical regression algorithms to deep learning models including Deep MLPs and RNNs, to derive computationally efficient surrogate policies. We analyze generalization capabilities, stability considerations, and the trade-offs inherent in different architectural choices. Our empirical study employs both online and offline evaluations to assess performance regarding accuracy, computational efficiency, and fidelity to the original MPC policy. Our results demonstrate that Behavior Cloning can effectively reduce the computational burden of MPC policies for 3-DOF robotic manipulators, achieving a 3x reduction in inference latency with a 84.98% success rate under relaxed tolerances. Notably, we find that static architectures outperform temporal variants, confirming the sufficiency of instantaneous state observations for this task. However, we observe a precision gap under strict tolerances, which suggest that while Behavior Cloning captures the global optimal trajectory, further research is needed to minimize terminal steady-state error.
   ],
   authors: (
     (
@@ -22,7 +22,6 @@
       email: "WTEO030@e.ntu.edu.sg",
     ),
   ),
-  index-terms: ("Behavior Cloning", "Model Predictive Control", "Neural Network Surrogates", "Real-time Control"),
   bibliography: bibliography("refs.bib"),
   figure-supplement: [Figure],
 )
@@ -35,7 +34,7 @@
   #align(left)[
     #block(width: 100%, stroke: (top: 0.5pt), inset: (top: 4pt))[
       #set text(size: 8pt)
-      #super("1") This project was performed while the authors were on an exchange program at the University of Waterloo. Present addresses: T. Guegan is with the Université de Technologie de Compiègne, France, and is currently a Machine Learning Engineer Intern at Opalin, California, USA. W.J.D. Teo is with Nanyang Technological University, Singapore, and is currently a Research Intern at Polytechnique Montréal, QC, Canada.
+      #super("1") This work was conducted during an exchange program at University of Waterloo. T. Guegan is currently with the Universite de Technologie de Compiègne, France, and ML Intern at Opalin, Redwood City, CA. W. J. D. Teo is currently with Nanyang Technological University, Singapore, and Research Intern at Polytechnique Montréal, QC, Canada. \ Code available : https://github.com/theguega/neural-mpc
     ]
   ]
 ]
