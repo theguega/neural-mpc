@@ -4,14 +4,9 @@
 #show cite: set text(blue)
 
 #show: ieee.with(
-<<<<<<< HEAD
   title: block(width: 100%, align(center)[
     Behavior Cloning of MPC for 3-DOF Robotic Manipulators
   ]),
-=======
-  title: [Behavior Cloning of MPC for 3-DOF Robotic Manipulators#super("1")],
->>>>>>> parent of d1a0b77 (Anonymized Paper)
-  
   abstract: [
     While Model Predictive Control (MPC) provides strong stability and robustness, it imposes a significant computational burden on real-time systems and resource-constrained devices. This paper investigates the application of Behavior Cloning to approximate MPC policies for the real-time control of a 3-degree-of-freedom (3-DOF) robotic manipulator. We present a baseline controller combining Inverse Kinematics with MPC and evaluate a spectrum of neural network architectures, ranging from classical regression algorithms to complex deep learning models including Deep MLPs and RNNs, to derive computationally efficient surrogate policies. We analyze generalization capabilities, stability considerations, and the trade-offs inherent in different architectural choices. Our empirical study employs both online and offline evaluations to assess performance regarding accuracy, computational efficiency, and fidelity to the original MPC policy. Our results demonstrate that Behavior Cloning can effectively reduce the computational burden of MPC policies for 3-DOF robotic manipulators, achieving a 3x reduction in inference latency with a 84.98% success rate under relaxed tolerances. Notably, we find that static architectures outperform temporal variants, confirming the sufficiency of instantaneous state observations for this task. However, we observe a precision gap under strict tolerances, which suggest that while Behavior Cloning captures the global optimal trajectory, further research is needed to minimize terminal steady-state error.
   ],
@@ -19,12 +14,12 @@
     (
       name: "Theo Guegan",
       organization: [University of Waterloo],
-      email: "theo.guegan@etu.utc.fr"
+      email: "theo.guegan@etu.utc.fr",
     ),
     (
       name: "Wen Jie Dexter Teo",
       organization: [University of Waterloo],
-      email: "WTEO030@e.ntu.edu.sg"
+      email: "WTEO030@e.ntu.edu.sg",
     ),
   ),
   index-terms: ("Behavior Cloning", "Model Predictive Control", "Neural Network Surrogates", "Real-time Control"),
@@ -40,7 +35,7 @@
   #align(left)[
     #block(width: 100%, stroke: (top: 0.5pt), inset: (top: 4pt))[
       #set text(size: 8pt)
-      #super("1") This project was performed while the authors were on an exchange program at the University of Waterloo. Present addresses: T. Guegan is with the Université de Technologie de Compiègne, France, and is currently a Machine Learning Engineer Intern at Stealth Startup, California, USA. W.J.D. Teo is with Nanyang Technological University, Singapore, and is currently a Research Intern at Polytechnique Montréal, QC, Canada.
+      #super("1") This project was performed while the authors were on an exchange program at the University of Waterloo. Present addresses: T. Guegan is with the Université de Technologie de Compiègne, France, and is currently a Machine Learning Engineer Intern at Opalin, California, USA. W.J.D. Teo is with Nanyang Technological University, Singapore, and is currently a Research Intern at Polytechnique Montréal, QC, Canada.
     ]
   ]
 ]
@@ -63,16 +58,16 @@ The manipulator operates in a MuJoCo simulation environment (@fig:3dof-arm-mujoc
   columns: 2,
   grid.cell([
     #figure(
-    image("figures/3dof-arm-mujoco.png", width: 70%),
-    caption: [3-DOF Arm in MuJoCo],
-  )<fig:3dof-arm-mujoco>
+      image("figures/3dof-arm-mujoco.png", width: 70%),
+      caption: [3-DOF Arm in MuJoCo],
+    )<fig:3dof-arm-mujoco>
   ]),
   grid.cell([
     #figure(
-    image("figures/3dof-arm-schema.png", width: 75%),
-    caption: [3-DOF Arm Schema @NgocSon2016],
-  )<fig:3dof-arm-schema>
-  ])
+      image("figures/3dof-arm-schema.png", width: 75%),
+      caption: [3-DOF Arm Schema @NgocSon2016],
+    )<fig:3dof-arm-schema>
+  ]),
 )
 
 
@@ -85,7 +80,7 @@ Our baseline controller uses a hierarchical architecture combining an Inverse Ki
 The IK module translates desired end-effector positions into feasible joint-space configurations. Let $p(q): RR^3 -> RR^3$ denote the forward kinematics mapping. The Cartesian error is defined as:
 
 $
- e = p_"des" - p(q)
+  e = p_"des" - p(q)
 $
 
 We solve the IK problem using the Jacobian transpose method with Damped Least Squares (DLS) for numerical stability near singularities. The iterative update rule is:
@@ -231,8 +226,8 @@ To establish performance benchmarks, we evaluated several standard regression al
 == Custom Multi-Layer Perceptron (MLP)
 
 We implemented a custom feedforward network to explore the impact of model capacity on cloning accuracy. This model processes the flat input vector through a series of fully connected linear layers with ReLU activations. We conducted an architectural search by varying:
-  - Depth: Number of hidden layers
-  - Width: Number of neurons per layer
+- Depth: Number of hidden layers
+- Width: Number of neurons per layer
 This memory-less architecture captures and learns directly the mapping from the current state and target to the required control action.
 
 == Time Series Models
@@ -303,16 +298,45 @@ For our regression baseline with scikit-learn, we evaluated several standard reg
       [*MAE* \ (Mean $plus.minus$ CI)],
       [*Expl. Var*],
       [*Dir. Acc.*],
-      [*MSE/Torque*]
+      [*MSE/Torque*],
     ),
 
-    model_col("Ridge"), $8.729 plus.minus 0.098$, $1.418 plus.minus 0.009$, [0.221], [0.681], vector_val("4.24, 5.54, 16.41"),
-    model_col("Random Forest"), $0.097 plus.minus 0.003$, $0.111 plus.minus 0.002$, [0.991], [0.999], vector_val("0.05, 0.08, 0.16"),
-    model_col("MLP Regressor"), $0.053 plus.minus 0.013$, $0.094 plus.minus 0.009$, [0.994], [0.938], vector_val("0.05, 0.03, 0.07"),
-    model_col("Gradient Boosting"), $1.017 plus.minus 0.059$, $0.243 plus.minus 0.005$, [0.843], [0.996], vector_val("2.30, 0.10, 0.65"),
-    model_col("KNN Regressor"), $0.237 plus.minus 0.038$, $0.091 plus.minus 0.002$, [0.976], [0.999], vector_val("0.20, 0.11, 0.40"),
+    model_col("Ridge"),
+    $8.729 plus.minus 0.098$,
+    $1.418 plus.minus 0.009$,
+    [0.221],
+    [0.681],
+    vector_val("4.24, 5.54, 16.41"),
+
+    model_col("Random Forest"),
+    $0.097 plus.minus 0.003$,
+    $0.111 plus.minus 0.002$,
+    [0.991],
+    [0.999],
+    vector_val("0.05, 0.08, 0.16"),
+
+    model_col("MLP Regressor"),
+    $0.053 plus.minus 0.013$,
+    $0.094 plus.minus 0.009$,
+    [0.994],
+    [0.938],
+    vector_val("0.05, 0.03, 0.07"),
+
+    model_col("Gradient Boosting"),
+    $1.017 plus.minus 0.059$,
+    $0.243 plus.minus 0.005$,
+    [0.843],
+    [0.996],
+    vector_val("2.30, 0.10, 0.65"),
+
+    model_col("KNN Regressor"),
+    $0.237 plus.minus 0.038$,
+    $0.091 plus.minus 0.002$,
+    [0.976],
+    [0.999],
+    vector_val("0.20, 0.11, 0.40"),
   ),
-  caption: [Comparison of regression algorithms on the validation set (averaged over 5 runs).]
+  caption: [Comparison of regression algorithms on the validation set (averaged over 5 runs).],
 )<table:regression_baseline>
 
 The results highlight the inherent non-linearity of the inverse dynamics mapping. Linear Regression failed to capture the underlying relationship, exhibiting high variance across all torque dimensions. In contrast, non-linear methods performed significantly better. The MLP Regressor achieved the lowest overall MSE ($0.053$), indicating its superior capability in minimizing large control deviations, which is critical for preventing hardware damage. While KNN Regressor achieved the highest Directional Accuracy ($99.87%$) and lowest MAE, its higher MSE suggests it suffers from occasional large prediction errors (outliers). Finally, different SVM models with linear and radial basis function (RBF) kernels were evaluated. However, as mentioned in the documentation, RBF kernels cannot scale with that many samples, whereas linear kernels yielded poor performance.
@@ -336,18 +360,14 @@ In this section, we compare performance of training models with two different lo
       top: if y == 0 { 1pt } else if y == 1 { 0.5pt } else { 0pt },
       bottom: 1pt,
     ),
-    table.header(
-      [*Model Config*],
-      [*MSE (Mean $plus.minus$ Std)*],
-      [*MAE (Mean $plus.minus$ Std)*]
-    ),
+    table.header([*Model Config*], [*MSE (Mean $plus.minus$ Std)*], [*MAE (Mean $plus.minus$ Std)*]),
 
     model_col("MLP_mse"), $0.1460 plus.minus 0.0522$, $0.1474 plus.minus 0.0126$,
     model_col("MLP_mae"), $0.2017 plus.minus 0.0455$, $0.0892 plus.minus 0.0078$,
     model_col("GRU_mse"), $1.1442 plus.minus 0.1441$, $0.2581 plus.minus 0.0138$,
     model_col("GRU_mae"), $2.1821 plus.minus 0.1001$, $0.3570 plus.minus 0.0101$,
   ),
-  caption :[Loss Comparison]
+  caption: [Loss Comparison],
 )<table:loss_comparison>
 
 Following this experiment, we adopted the MSE loss function for our experiments because models trained with it consistently achieved lower test error and lower variance across runs, as shown in @table:loss_comparison. In particular, the MLP_mse and GRU_mse configurations outperformed their MAE-trained counterparts in terms of MSE, which was our primary performance metric for policy imitation.
@@ -367,25 +387,23 @@ We evaluated four variations of the Multi-Layer Perceptron (MLP) and four variat
 #figure(
   table(
     columns: (auto, auto, auto),
-      inset: 5pt,
-      align: (col, row) => (if col == 0 { left } else { center + horizon }),
-      stroke: (x, y) => (
-        top: if y == 0 { 1pt } else if y == 1 { 0.5pt } else { 0pt },
-        bottom: 1pt,
-      ),
-    table.header(
-      [*Model Name*], [*Type*], [*Parameters*]
+    inset: 5pt,
+    align: (col, row) => (if col == 0 { left } else { center + horizon }),
+    stroke: (x, y) => (
+      top: if y == 0 { 1pt } else if y == 1 { 0.5pt } else { 0pt },
+      bottom: 1pt,
     ),
-    [MLP_Small],        [MLP], [Hidden Layers: [64, 32]],
-    [MLP_Medium],       [MLP], [Hidden Layers: [128, 64]],
-    [MLP_Deep],         [MLP], [Hidden Layers: [256, 128, 64, 32]],
-    [MLP_Deep_Scaled],  [MLP], [Hidden Layers: [512, 256, 128, 64]],
-    [GRU_Shallow],      [GRU], [Hidden Dim: 64, Layers: 1],
-    [GRU_Medium],       [GRU], [Hidden Dim: 128, Layers: 2],
-    [GRU_Deep],         [GRU], [Hidden Dim: 128, Layers: 4],
-    [GRU_Wide],         [GRU], [Hidden Dim: 256, Layers: 2],
+    table.header([*Model Name*], [*Type*], [*Parameters*]),
+    [MLP_Small], [MLP], [Hidden Layers: [64, 32]],
+    [MLP_Medium], [MLP], [Hidden Layers: [128, 64]],
+    [MLP_Deep], [MLP], [Hidden Layers: [256, 128, 64, 32]],
+    [MLP_Deep_Scaled], [MLP], [Hidden Layers: [512, 256, 128, 64]],
+    [GRU_Shallow], [GRU], [Hidden Dim: 64, Layers: 1],
+    [GRU_Medium], [GRU], [Hidden Dim: 128, Layers: 2],
+    [GRU_Deep], [GRU], [Hidden Dim: 128, Layers: 4],
+    [GRU_Wide], [GRU], [Hidden Dim: 256, Layers: 2],
   ),
-  caption: [Summary of model architectures and hyperparameters used during tuning.]
+  caption: [Summary of model architectures and hyperparameters used during tuning.],
 ) <tab:model_configs>
 
 To approximate temporal awareness, we also implemented Sliding Window variants (W=5) across the four MLP architectures, using the same hidden layer parameters.
@@ -393,7 +411,7 @@ To approximate temporal awareness, we also implemented Sliding Window variants (
 === Results Analysis
 #figure(
   image("figures/grouped_complexity_comparison.png", width: 100%),
-  caption :[Architecture Comparison (Metric: MSE). Error bars represent the standard deviation across 5 runs. Note: GRU_Wide is plot under Deep+.]
+  caption: [Architecture Comparison (Metric: MSE). Error bars represent the standard deviation across 5 runs. Note: GRU_Wide is plot under Deep+.],
 ) <fig:architecture_comparison>
 
 The performance comparison in @fig:architecture_comparison highlights distinct trends between the MLP and GRU architectures:
@@ -414,7 +432,7 @@ While Scikit-learn baselines failed to control the robot ($<35%$ success rate), 
 
 #figure(
   image("figures/closed_loop_success_thresholds.png", width: 100%),
-  caption :[Comparison of closed-loop success rates across different error tolerances ($epsilon$). The bar graphs represent the mean values across 5 runs.]
+  caption: [Comparison of closed-loop success rates across different error tolerances ($epsilon$). The bar graphs represent the mean values across 5 runs.],
 ) <fig:success_thresholds>
 
 @fig:success_thresholds illustrates the performance of the top-performing models. The results highlight a precision gap in behavior cloning. MLP_Deep was able to achieve 84.98% success rate under relaxed tolerances, but only 64.16% under strict tolerance. However, the mean final tracking error was only 2.9 cm, confirming that the majority of failures were near-misses. This evaluation also confirms our results from earlier, whereby static MLP outperformed temporal architectures, validating that temporal history is unnecessary for this task.
@@ -424,7 +442,7 @@ We compared the distribution of solve times between the MPC and MLP_Deep.
 
 #figure(
   image("figures/mpc_mlp_solvetime_boxplot.png", width: 65%),
-  caption :[Distribution of Inference Latency per Control Step.]
+  caption: [Distribution of Inference Latency per Control Step.],
 ) <fig:solvetime_boxplot>
 
 The MLP_Deep policy achieved a mean solve time of 1.102$plus.minus$0.614ms. This is nearly one-third of the mean solve time of the MPC Expert. Notably, the neural network offers a much more deterministic inference time as seen in @fig:solvetime_boxplot, making it more suitable for hard real-time constraints than the MPC, whose solve time fluctuates significantly based on the optimization landscape. Additionally, MLP_Deep utilized significantly fewer system resources, with a 25% decrease in CPU utilization as compared to the MPC.

@@ -1,5 +1,5 @@
 [project]
-name = "mpc-surrogate"
+name = "neural-mpc"
 version = "0.1.0"
 description = "Approximating Model Predictive Control policies using neural networks"
 readme = "README.md"

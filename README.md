@@ -1,4 +1,4 @@
-# MPC Surrogate
+# neural-mpc
 
 [![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -12,8 +12,7 @@ This repository implements a surrogate modeling approach to replace computationa
 ## Features
 
 - **MuJoCo Simulation**: Realistic physics simulation of a 3DOF robot arm
-- **MPC Implementation**: Full MPC controller using CasADi for optimal control
-- **Neural Network Surrogates**: Trainable NN models to approximate MPC policies
+- **Neural Network Surrogates**: Trainable NN models to approximate IK + MPC policies
 - **Data Generation**: Scripts for collecting MPC trajectory data
 - **Evaluation Tools**: Closed-loop testing and performance comparison
 - **Visualization**: Comprehensive plotting and analysis tools
@@ -22,35 +21,31 @@ This repository implements a surrogate modeling approach to replace computationa
 
 ### Prerequisites
 
-- Python 3.12 or higher
-- uv package manager (recommended)
+- tested with Python 3.12.13
 
 ### Setup
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/your-username/mpc-surrogate.git
-   cd mpc-surrogate
+   git clone git@github.com:theguega/neural-mpc.git
+   cd neural-mpc
    ```
 
 2. Install dependencies using uv:
+
    ```bash
    uv sync
-   ```
-
-3. (Optional) Install development dependencies:
-   ```bash
-   uv sync --group dev
    ```
 
 ## Usage
 
 ### Data Generation
 
-Generate MPC trajectory data for training:
+Solve the IK + MPC trajectory data for training:
 
 ```bash
-python scripts/data_generator.py
+uv run python scripts/data_generator.py
 ```
 
 ### Training
@@ -58,7 +53,7 @@ python scripts/data_generator.py
 Train neural network surrogates using the provided Jupyter notebook:
 
 ```bash
-jupyter notebook scripts/mpc_surrogate_training.ipynb
+jupyter notebook scripts/neural-mpc-training.ipynb
 ```
 
 ### Interactive Simulation
@@ -66,7 +61,7 @@ jupyter notebook scripts/mpc_surrogate_training.ipynb
 Launch the MuJoCo interactive viewer:
 
 ```bash
-python scripts/interactive_mujoco_launcher.py
+uv run python scripts/interactive_mujoco_launcher.py
 ```
 
 ### Closed-Loop Testing
@@ -74,7 +69,7 @@ python scripts/interactive_mujoco_launcher.py
 Evaluate controller performance:
 
 ```bash
-python scripts/closed_loop_eval.py
+uv run python scripts/closed_loop_eval.py
 ```
 
 ### Dataset Analysis
@@ -82,7 +77,7 @@ python scripts/closed_loop_eval.py
 Analyze closed-loop evaluation results and generate comparison plots:
 
 ```bash
-python scripts/analyze_closed_loop.py
+uv run python scripts/analyze_closed_loop.py
 ```
 
 ### Visualization
@@ -90,7 +85,7 @@ python scripts/analyze_closed_loop.py
 Visualize scikit-learn baseline results:
 
 ```bash
-python scripts/visualize_scikit_results.py
+uv run python scripts/visualize_scikit_results.py
 ```
 
 ### Dataset Scaling
@@ -98,7 +93,7 @@ python scripts/visualize_scikit_results.py
 Test model performance with different dataset sizes:
 
 ```bash
-python scripts/dataset_scale.py
+uv run python scripts/dataset_scale.py
 ```
 
 ### Dataset Replay
@@ -106,7 +101,7 @@ python scripts/dataset_scale.py
 Replay dataset trajectories in MuJoCo for visualization:
 
 ```bash
-python scripts/replay_dataset_mujoco.py
+uv run python scripts/replay_dataset_mujoco.py
 ```
 
 ## Project Structure
@@ -122,7 +117,7 @@ python scripts/replay_dataset_mujoco.py
 │   ├── data_generator.py            # MPC data generation
 │   ├── dataset_scale.py             # Dataset scaling experiments
 │   ├── interactive_mujoco_launcher.py # Interactive MuJoCo viewer
-│   ├── mpc_surrogate_training.ipynb # Main training notebook
+│   ├── neural-mpc-training.ipynb     # Main training notebook
 │   ├── replay_dataset_mujoco.py     # Dataset visualization
 │   ├── scikit_learn_baseline.py     # Baseline model training
 │   └── visualize_scikit_results.py  # Results visualization
@@ -131,25 +126,6 @@ python scripts/replay_dataset_mujoco.py
 │   ├── mujoco_env.py        # MuJoCo environment wrapper
 │   └── utils.py             # Helper functions
 └── tests/                   # Unit tests
-```
-
-## Development
-
-### Testing
-
-Run the test suite:
-
-```bash
-pytest
-```
-
-### Code Quality
-
-Format and lint code:
-
-```bash
-ruff check . --fix
-ruff format .
 ```
 
 ## Contributing
@@ -170,10 +146,10 @@ Dexter - [GitHub](https://github.com/dexterteo4)
 If you use this code in your research, please cite the relevant papers from the `docs/refs.bib` file or refer to this repository:
 
 ```bibtex
-@misc{mpc-surrogate,
-  title={Approximating Model Predictive Control policies using neural networks},
+@misc{neural-mpc,
+  title={Behavior Cloning of MPC for 3-DOF Robotic Manipulators},
   author={Theo Guegan, Wen Jie Dexter Teo},
   year={2025},
-  url={https://github.com/theguega/mpc-surrogate}
+  url={https://github.com/theguega/neural-mpc}
 }
 ```

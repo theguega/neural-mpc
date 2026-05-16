@@ -63,10 +63,10 @@ def plot_metrics(df, output_dir):
             torque_data.append({"model": row["model"], "Torque": f"Torque {i + 1}", "MSE": val})
 
     df_torque = pd.DataFrame(torque_data)
-    
+
     # Ensure Torque column maintains order: Torque 1, Torque 2, Torque 3
     df_torque["Torque"] = pd.Categorical(df_torque["Torque"], categories=["Torque 1", "Torque 2", "Torque 3"], ordered=True)
-    
+
     # Sort models by increasing Torque 1 MSE
     torque1_data = df_torque[df_torque["Torque"] == "Torque 1"].groupby("model")["MSE"].mean().sort_values()
     model_order = torque1_data.index.tolist()
